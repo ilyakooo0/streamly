@@ -83,8 +83,6 @@ extra-source-files:
     benchmark/Streamly/Benchmark/Data/Array/Stream.hs
     benchmark/Streamly/Benchmark/Data/Fold/Window.hs
     benchmark/Streamly/Benchmark/Data/Stream/*.hs
-    benchmark/Streamly/Benchmark/FileSystem/*.hs
-    benchmark/Streamly/Benchmark/FileSystem/Handle/*.hs
     benchmark/Streamly/Benchmark/Prelude/*.hs
     benchmark/Streamly/Benchmark/Unicode/*.hs
     benchmark/lib/Streamly/Benchmark/*.hs
@@ -104,7 +102,6 @@ extra-source-files:
     -- This is duplicated
     src/Streamly/Internal/Data/Stream/Instances.hs
 
-    src/Streamly/Internal/FileSystem/Event/Darwin.h
     src/assert.hs
     src/config.h.in
     src/inline.hs
@@ -421,33 +418,12 @@ library
 
                      , Streamly.Internal.Data.Stream.IsStream
 
-    if !impl(ghcjs) && flag(dev)
-        other-modules:
-                       Streamly.Internal.System.IOVec.Type
-                     , Streamly.Internal.System.IOVec
-                     , Streamly.Internal.FileSystem.FDIO
-                     , Streamly.Internal.FileSystem.FD
-
     if flag(dev)
         exposed-modules: Streamly.Internal.Data.SmallArray
         -- Exposed modules show up on hackage irrespective of the flag, so keep
         -- it hidden.
         other-modules:  Streamly.Data.SmallArray
                       , Streamly.Internal.Data.SmallArray.Type
-
-    if os(windows)
-          exposed-modules: Streamly.Internal.FileSystem.Event.Windows
-
-    if os(darwin)
-          include-dirs:  src/Streamly/Internal
-          c-sources: src/Streamly/Internal/FileSystem/Event/Darwin.m
-          exposed-modules: Streamly.Internal.FileSystem.Event.Darwin
-
-    if os(linux)
-          exposed-modules: Streamly.Internal.FileSystem.Event.Linux
-
-    if os(linux) || os(darwin) || os(windows)
-          exposed-modules: Streamly.Internal.FileSystem.Event
 
     other-modules:
            Streamly.Internal.Data.Channel.Types
@@ -538,17 +514,6 @@ library
 
     if flag(dev)
       build-depends: primitive >= 0.5.4 && < 0.9
-
-    -- For FileSystem.Event module
-    if os(linux)
-      build-depends: directory >= 1.2.2 && < 1.4
-
-    if os(windows)
-      build-depends: Win32 >= 2.6 && < 2.14
-
-    if os(darwin)
-      build-depends: directory >= 1.2.2 && < 1.4
-      frameworks: Cocoa
 
     if flag(inspection)
       build-depends:   inspection-testing >= 0.4   && < 0.6
